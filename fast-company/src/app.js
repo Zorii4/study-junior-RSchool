@@ -29,7 +29,11 @@ function App() {
     return (
         <>
             <SearchStatus length={users.length} />
-            <Users users={users} onDelete={handleDelete} onMarked={handleBookmark} />
+            <Users
+                users={users}
+                onDelete={handleDelete}
+                onMarked={handleBookmark}
+            />
         </>
     )
 }

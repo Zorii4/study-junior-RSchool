@@ -1,8 +1,9 @@
 import React from "react"
 import titles from "../utils/utils.js"
+import propTypes from "prop-types"
 
 const SearchStatus = ({ length }) => {
-    let title = ["человек", "человека", "человек"]
+    const title = ["человек", "человека", "человек"]
     if (length === 0) {
         return <span className="badge bg-danger">Никто с тобой не тусанёт</span>
     } else {
@@ -12,6 +13,10 @@ const SearchStatus = ({ length }) => {
             </span>
         )
     }
+}
+
+SearchStatus.propTypes = {
+    length: propTypes.number.isRequired
 }
 
 export default SearchStatus

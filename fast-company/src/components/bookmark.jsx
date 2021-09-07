@@ -1,3 +1,4 @@
+import propTypes from "prop-types"
 import React from "react"
 
 const Bookmark = ({ user, onMarkedSelect }) => {
@@ -13,3 +14,8 @@ const Bookmark = ({ user, onMarkedSelect }) => {
 }
 
 export default Bookmark
+
+Bookmark.propTypes = {
+    user: propTypes.array.isRequired,
+    onMarkedSelect: propTypes.func.isRequired
+}
