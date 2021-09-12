@@ -16,6 +16,6 @@ const Bookmark = ({ user, onMarkedSelect }) => {
 export default Bookmark
 
 Bookmark.propTypes = {
-    user: propTypes.array.isRequired,
+    user: propTypes.object.isRequired,
     onMarkedSelect: propTypes.func.isRequired
 }
