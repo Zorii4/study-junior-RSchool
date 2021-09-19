@@ -1,21 +1,18 @@
-import propTypes from "prop-types"
 import React from "react"
+import propTypes from "prop-types"
 
-const Bookmark = ({ user, onMarkedSelect }) => {
-    const styleSelect = user.selected ? "-fill" : ""
-    const styleMark = `bi bi-heart${styleSelect}`
+const Bookmark = ({ status, ...rest }) => {
     return (
         <i
-            className={styleMark}
+            {...rest}
+            className={"bi bi-heart" + (status ? "-fill" : "")}
             style={{ cursor: "pointer" }}
-            onClick={() => onMarkedSelect(user._id)}
         ></i>
     )
 }
 
-export default Bookmark
-
 Bookmark.propTypes = {
-    user: propTypes.object.isRequired,
-    onMarkedSelect: propTypes.func.isRequired
+    status: propTypes.bool
 }
+
+export default Bookmark

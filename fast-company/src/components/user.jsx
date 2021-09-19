@@ -3,7 +3,7 @@ import Qualitie from "./qualitie"
 import Bookmark from "./bookmark"
 import propTypes from "prop-types"
 
-const User = ({ user, onDelete, onMarked }) => {
+const User = ({ user, onDelete, onMarkedSelect }) => {
     return (
         <tr>
             <td>{user.name}</td>
@@ -16,7 +16,10 @@ const User = ({ user, onDelete, onMarked }) => {
             <td>{user.completedMeetings}</td>
             <td>{user.rate}</td>
             <td>
-                <Bookmark user={user} onMarkedSelect={onMarked} />
+                <Bookmark
+                    status={bookmark}
+                    onClick={() => onMarkedSelect(user._id)}
+                />
             </td>
             <td>
                 <button
@@ -35,7 +38,8 @@ const User = ({ user, onDelete, onMarked }) => {
 User.propTypes = {
     user: propTypes.object.isRequired,
     onDelete: propTypes.func.isRequired,
-    onMarked: propTypes.func.isRequired
+    onMarkedSelect: propTypes.func.isRequired,
+    bookmark: propTypes.bool.isRequired
 }
 
 export default User
