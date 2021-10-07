@@ -1,8 +1,8 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
-import MainPage from "./components/mainPage"
+import MainPage from "./layouts/mainPage"
 import NavBar from "./components/navBar"
-import Login from "./components/login"
+import Login from "./layouts/login"
 import RouterDirection from "./components/routerDirection"
 
 function App() {

@@ -1,6 +1,6 @@
 import React from "react"
 import { useParams } from "react-router-dom"
-import Users from "./users"
+import Users from "../layouts/users"
 import UserInfo from "./userInfo"
 
 const RouterDirection = () => {
