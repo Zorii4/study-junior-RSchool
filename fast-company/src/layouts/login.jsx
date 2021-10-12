@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useEffect } from "react/cjs/react.development"
 import TextField from "../components/textField"
+import { validator } from "../utils/validator"
 
 const Login = () => {
     const [data, setData] = useState({ email: "", password: "" })
@@ -13,20 +14,44 @@ const Login = () => {
         }))
     }
 
+    const validatorConfig = {
+        email: {
+            isRequered: {
+                message: "Эектронная почта обязательна для заполнения"
+            },
+            isEmail: {
+                message: "Email введен не корректно"
+            }
+        },
+        password: {
+            isRequered: {
+                message: "Поле пароль обязательно для заполнения"
+            },
+            isCapitalSymbol: {
+                message: "Пароль должен содержать хотя бы одну заглавную букву"
+            },
+            isContainDigit: {
+                message: "Пароль должен содержать хотя бы одно число"
+            },
+            min: {
+                message: "Пароль должен состоять минимум из 8 символов",
+                value: 8
+            }
+        }
+    }
+
     useEffect(() => {
         validate()
     }, [data])
 
     const validate = () => {
-        const errors = {}
-        for (const fieldName in data) {
-            if (data[fieldName].trim() === "") {
-                errors[fieldName] = `${fieldName} обязательно для заполнения`
-            }
-        }
+        const errors = validator(data, validatorConfig)
+        validator(data, validatorConfig)
         setErrors(errors)
-        return Object.keys(errors).length !== 0
+        return Object.keys(errors).length === 0
     }
+
+    const isValid = Object.keys(errors).length === 0
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -36,24 +61,37 @@ const Login = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <TextField
-                label="Электронная почта"
-                name="email"
-                value={data.email}
-                onChange={handleChange}
-                error={errors.email}
-            />
-            <TextField
-                label="Пароль"
-                type="password"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
-                error={errors.password}
-            />
-            <button type="submit">Submit</button>
-        </form>
+        <div className="container mt-5">
+            <div className="row">
+                <div className="col-md-6 offset-md-3 shadow p-4">
+                    <h3 className="mb-4">Login</h3>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            label="Электронная почта"
+                            name="email"
+                            value={data.email}
+                            onChange={handleChange}
+                            error={errors.email}
+                        />
+                        <TextField
+                            label="Пароль"
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            onChange={handleChange}
+                            error={errors.password}
+                        />
+                        <button
+                            type="submit"
+                            disabled={!isValid}
+                            className="btn btn-primary w-100 mx-auto"
+                        >
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     )
 }
 
