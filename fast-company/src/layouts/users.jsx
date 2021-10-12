@@ -7,12 +7,14 @@ import api from "../api"
 import SearchStatus from "../components/searchStatus"
 import UserTable from "../components/usersTable"
 import _ from "lodash"
+import SearchUser from "../components/searchUser"
 
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfession] = useState()
     const [selectedProf, setSelectedProf] = useState()
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" })
+    const [dataSearch, setDataSearch] = useState("")
 
     const pageSize = 8
 
@@ -60,19 +62,30 @@ const Users = () => {
     }
 
     if (users) {
-        const filtredUsers = selectedProf
+        let filtredUsers = selectedProf
             ? users.filter((user) => user.profession._id === selectedProf._id)
             : users
+
+        filtredUsers = filtredUsers.filter((item) => {
+            return item.name.toLowerCase().includes(dataSearch.toLowerCase())
+        })
+
         const count = filtredUsers.length
         const sortedUsers = _.orderBy(
             filtredUsers,
             [sortBy.path],
             [sortBy.order]
         )
+
         const userCrop = paginate(sortedUsers, currentPage, pageSize)
 
         const clearFilter = () => {
             setSelectedProf()
+        }
+
+        const handleChangeSearch = (value) => {
+            setDataSearch(value)
+            clearFilter()
         }
 
         return (
@@ -94,6 +107,10 @@ const Users = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+                    <SearchUser
+                        onSearchUser={handleChangeSearch}
+                        searchValue={dataSearch}
+                    />
                     {count > 0 && (
                         <UserTable
                             users={userCrop}
@@ -121,7 +138,8 @@ const Users = () => {
 Users.propTypes = {
     users: PropTypes.array,
     currentPage: PropTypes.number,
-    pageSize: PropTypes.number
+    pageSize: PropTypes.number,
+    onSearchUser: PropTypes.func
 }
 
 export default Users
