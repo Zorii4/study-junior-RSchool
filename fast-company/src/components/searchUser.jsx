@@ -3,15 +3,18 @@ import PropTypes from "prop-types"
 
 const SearchUser = ({ searchValue, onSearchUser }) => {
     return (
-        <form action="">
-            <input
-                type="text"
-                placeholder="Search..."
-                value={searchValue}
-                name="search"
-                onChange={({ target }) => onSearchUser(target.value)}
-            />
-        </form>
+        <div className="row">
+            <div className="col-auto w-100 mt-2">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchValue}
+                    name="search"
+                    onChange={({ target }) => onSearchUser(target.value)}
+                    className="form-control"
+                />
+            </div>
+        </div>
     )
 }
 

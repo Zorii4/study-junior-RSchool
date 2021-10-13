@@ -51,6 +51,7 @@ const Users = () => {
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item)
+        setDataSearch("")
     }
 
     const handlePageChange = (pageIndex) => {
