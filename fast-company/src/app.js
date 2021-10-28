@@ -1,9 +1,9 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
 import MainPage from "./layouts/mainPage"
-import NavBar from "./components/navBar"
+import NavBar from "./components/ui/navBar"
 import Login from "./layouts/login"
-import RouterDirection from "./components/routerDirection"
+import Users from "./layouts/users"
 
 function App() {
     return (
@@ -11,8 +11,8 @@ function App() {
             <NavBar />
             <Switch>
                 <Route path="/" exact component={MainPage} />
-                <Route path="/login" component={Login} />
-                <Route path="/users/:userId?" component={RouterDirection} />
+                <Route path="/login/:type?" component={Login} />
+                <Route path="/users/:userId?/:edit?" component={Users} />
             </Switch>
         </>
     )

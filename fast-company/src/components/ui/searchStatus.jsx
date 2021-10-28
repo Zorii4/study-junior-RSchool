@@ -1,5 +1,5 @@
 import React from "react"
-import titles from "../utils/utils.js"
+import titles from "../../utils/utils.js"
 import propTypes from "prop-types"
 
 const SearchStatus = ({ length }) => {
