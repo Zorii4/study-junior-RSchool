@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import UserPage from "../components/page/userPage"
 import UsersListPage from "../components/page/usersListPage"
 import UserEditPage from "../components/page/userEditPage"
+import UserProvider from "../hooks/useUsers"
 
 const Users = () => {
     const params = useParams()
@@ -10,15 +11,17 @@ const Users = () => {
     /*eslint-disable*/
     return (
         <>
-            {userId ? (
-                edit ? (
-                    <UserEditPage />
+            <UserProvider>
+                {userId ? (
+                    edit ? (
+                        <UserEditPage />
+                    ) : (
+                        <UserPage id={userId} />
+                    )
                 ) : (
-                    <UserPage id={userId} />
-                )
-            ) : (
-                <UsersListPage />
-            )}
+                    <UsersListPage />
+                )}
+            </UserProvider>
         </>
     )
 }
