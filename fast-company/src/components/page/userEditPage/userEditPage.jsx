@@ -1,36 +1,39 @@
 import React, { useEffect, useState } from "react"
 import TextField from "../../common/form/textField"
-import api from "../../../api"
-import { useHistory, useParams } from "react-router"
+import { useHistory } from "react-router"
 import SelectField from "../../common/form/selectField"
 import RadioField from "../../common/form/radioField"
 import MultiSelectField from "../../common/form/multiSelectField"
 import { validator } from "../../../utils/validator"
 import PropTypes from "prop-types"
+import { useUser } from "../../../hooks/useUsers"
+import { useProfessions } from "../../../hooks/useProfession"
+import { useQualities } from "../../../hooks/useQualities"
+import { useAuth } from "../../../hooks/useAuth"
 
-const UserEditPage = () => {
-    const [dataUser, setDataUser] = useState()
-    const [professions, setProfessions] = useState({})
-    const [qualities, setQualities] = useState({})
+const UserEditPage = ({ id }) => {
+    const { currentUser } = useAuth()
+    const { professions } = useProfessions()
+    const { qualities } = useQualities()
+    const { getUserById } = useUser()
+    const { editUser } = useAuth()
     const [errors, setErrors] = useState({})
-    const { userId } = useParams()
+    const [dataUser, setDataUser] = useState(getUserById(id))
     const history = useHistory()
+
+    if (currentUser._id !== id) {
+        setTimeout(() => {
+            history.push(`/users/${currentUser._id}/edit`)
+        })
+    }
+
+    useEffect(() => {
+        setDataUser(getUserById(id))
+    }, [id])
 
     useEffect(() => {
         validate()
     }, [dataUser])
-
-    useEffect(() => {
-        api.users.getById(userId).then((data) => {
-            setDataUser(data)
-        })
-        api.professions.fetchAll().then((data) => {
-            setProfessions(data)
-        })
-        api.qualities.fetchAll().then((data) => {
-            setQualities(data)
-        })
-    }, [])
 
     const validatorConfig = {
         email: {
@@ -39,6 +42,11 @@ const UserEditPage = () => {
             },
             isEmail: {
                 message: "Email введен не корректно"
+            }
+        },
+        name: {
+            isRequered: {
+                message: "Имя обязательно для заполнения"
             }
         }
     }
@@ -51,40 +59,26 @@ const UserEditPage = () => {
     const isValid = Object.keys(errors).length === 0
 
     const handleChange = ({ name, value }) => {
-        let newValue = value
-        if (name === "profession") {
-            const arrayProfessions = Object.keys(professions).map((item) => ({
-                name: professions[item].name,
-                _id: professions[item]._id
-            }))
-
-            newValue = arrayProfessions.find((item) => item._id === newValue)
-        }
-
         if (name === "qualities") {
-            newValue = value.map((item) =>
-                Object.values(qualities).find(
-                    (qualitie) => qualitie._id === item.value
-                )
-            )
+            value = value.map((item) => item.value)
         }
-
-        setDataUser((prevState) => ({ ...prevState, [name]: newValue }))
+        setDataUser((prevState) => ({ ...prevState, [name]: value }))
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
         if (validate()) {
-            api.users.update(userId, dataUser)
+            console.log(dataUser)
+            editUser(dataUser)
             backToUserPage()
         }
     }
 
     const backToUserPage = () => {
-        history.push(`/users/${userId}/`)
+        history.push(`/users/${id}/`)
     }
 
-    if (!dataUser) return <>loading...</>
+    if (!dataUser || !professions || !qualities) return <>loading...</>
 
     return (
         <div className="container">
@@ -118,14 +112,13 @@ const UserEditPage = () => {
                             <SelectField
                                 label="Выбери свою профессию"
                                 name="profession"
-                                options={Object.keys(professions).map(
-                                    (item) => ({
-                                        name: professions[item].name,
-                                        value: professions[item]._id
-                                    })
-                                )}
+                                options={professions.map((profession) => ({
+                                    label: profession.name,
+                                    value: profession._id
+                                }))}
                                 onChange={handleChange}
-                                value={dataUser.profession._id}
+                                value={dataUser.profession}
+                                defaultOption="Choose..."
                             />
 
                             <RadioField
@@ -140,13 +133,18 @@ const UserEditPage = () => {
                                 label="Выберите ваш пол"
                             />
                             <MultiSelectField
-                                label="Выберите ваши качества"
-                                options={qualities}
-                                onChange={handleChange}
                                 name="qualities"
-                                value={dataUser.qualities.map((qualitie) => ({
-                                    label: qualitie.name,
-                                    value: qualitie._id
+                                label="Выберите ваши качества"
+                                options={qualities.map((quality) => ({
+                                    label: quality.name,
+                                    value: quality._id
+                                }))}
+                                onChange={handleChange}
+                                value={dataUser.qualities.map((quality) => ({
+                                    label: qualities.find(
+                                        (q) => q._id === quality
+                                    ).name,
+                                    value: quality
                                 }))}
                             />
 
@@ -166,7 +164,7 @@ const UserEditPage = () => {
 }
 
 UserEditPage.propTypes = {
-    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 export default UserEditPage

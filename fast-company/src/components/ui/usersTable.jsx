@@ -2,18 +2,16 @@ import React from "react"
 import PropTypes from "prop-types"
 // import User from "./user"
 import Bookmark from "../common/bookmark"
-// import Qualities from "./qualities"
 import Table from "../common/table"
 import { Link } from "react-router-dom"
 import Profession from "./profession"
-import Quality from "./quality"
+import Qualities from "./qualities"
 
 const UserTable = ({
     users,
     onSort,
     selectedSort,
     onMarkedSelect,
-    onDelete,
     ...rest
 }) => {
     const columns = {
@@ -26,7 +24,7 @@ const UserTable = ({
         },
         qualities: {
             name: "Качества",
-            component: (user) => <Quality id={user.qualities} />
+            component: (user) => <Qualities qualities={user.qualities} />
         },
         professions: {
             name: "Профессия",
@@ -46,16 +44,6 @@ const UserTable = ({
                     onClick={() => onMarkedSelect(user._id)}
                 />
             )
-        },
-        delete: {
-            component: (user) => (
-                <button
-                    className="btn btn-danger"
-                    onClick={() => onDelete(user._id)}
-                >
-                    delete
-                </button>
-            )
         }
     }
     return (
@@ -72,8 +60,7 @@ UserTable.propTypes = {
     users: PropTypes.array.isRequired,
     onSort: PropTypes.func.isRequired,
     selectedSort: PropTypes.object.isRequired,
-    onMarkedSelect: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired
+    onMarkedSelect: PropTypes.func.isRequired
 }
 
 export default UserTable

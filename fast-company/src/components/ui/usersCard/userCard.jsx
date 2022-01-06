@@ -1,22 +1,26 @@
 import React from "react"
 import { useHistory } from "react-router-dom"
-import Avatar from "../avatar"
 import PropTypes from "prop-types"
+import { useAuth } from "../../../hooks/useAuth"
 
 const UserCard = ({ user, id }) => {
     const history = useHistory()
+    const { currentUser } = useAuth()
 
     return (
         <div className="card mb-3">
             <div className="card-body">
-                <button
-                    className="position-absolute top-0 end-0 btn btn-light btn-sm"
-                    onClick={() => history.replace(`${id}/edit`)}
-                >
-                    <i className="bi bi-gear"></i>
-                </button>
+                {currentUser._id === user._id && (
+                    <button
+                        className="position-absolute top-0 end-0 btn btn-light btn-sm"
+                        onClick={() => history.replace(`${id}/edit`)}
+                    >
+                        <i className="bi bi-gear"></i>
+                    </button>
+                )}
+
                 <div className="d-flex flex-column align-items-center text-center position-relative">
-                    <Avatar width={"150"} />
+                    <img src={user.image} />
                     <div className="mt-3">
                         <h4>{user.name}</h4>
                         <p className="text-secondary mb-1">
