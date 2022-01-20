@@ -43,15 +43,7 @@ const AuthProvider = ({ children }) => {
             const { code, message } = error.response.data.error;
             console.log(code, message);
             if (code === 400) {
-                switch (message) {
-                    case "INVALID_PASSWORD":
-                        throw new Error("Email или пароль введены некорректно");
-
-                    default:
-                        throw new Error(
-                            "Слишком много попыток входа. Попробуйте позднее"
-                        );
-                }
+               
             }
         }
     }
@@ -64,6 +56,7 @@ const AuthProvider = ({ children }) => {
     function randomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
+
     async function updateUserData(data) {
         const { content } = await userService.update(data);
         setUser(content);
@@ -74,6 +67,7 @@ const AuthProvider = ({ children }) => {
             errorCatcher(error);
         }
     }
+    
     async function signUp({ email, password, ...rest }) {
         try {
             const { data } = await httpAuth.post(`accounts:signUp`, {
